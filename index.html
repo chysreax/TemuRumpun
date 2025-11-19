@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temu Rumpun - Temukan Rumah, Temukan Komunitasmu</title>
+    <title>Temu Rumpun - Cari Teman Serumah Jadi Seru</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,259 +11,429 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #1a102b; /* Deep, dark purple */
-            color: #e0e0e0; /* Soft off-white for text */
+            background-color: #1a102b;
+            color: #e0e0e0;
+            overflow-x: hidden;
         }
-        .bg-primary { background-color: #1a102b; }
-        .bg-secondary { background-color: #2c1a4d; } /* Lighter purple for cards */
-        .text-accent { color: #ff8c00; } /* Vibrant, deep orange */
+
+        /* --- ANIMASI BACKGROUND (The "Vibe") --- */
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.6;
+            animation: float-blob 10s infinite ease-in-out alternate;
+        }
+        .blob-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: #2c1a4d; animation-delay: 0s; }
+        .blob-2 { bottom: -10%; right: -10%; width: 400px; height: 400px; background: #4c1d95; animation-delay: 2s; }
+        .blob-3 { top: 40%; left: 50%; width: 300px; height: 300px; background: rgba(255, 140, 0, 0.15); animation-delay: 4s; transform: translate(-50%, -50%); }
+
+        @keyframes float-blob {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(20px, 40px) scale(1.1); }
+        }
+
+        /* --- GLASSMORPHISM --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        /* --- ACCENT COLORS --- */
+        .text-accent { color: #ff8c00; }
+        .bg-accent { background-color: #ff8c00; }
         .border-accent { border-color: #ff8c00; }
+
+        /* --- BUTTONS --- */
         .btn-accent {
-            background-color: #ff8c00;
+            background: linear-gradient(135deg, #ff8c00 0%, #ff6a00 100%);
             color: #1a102b;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 4px 15px 0 rgba(255, 140, 0, 0.25);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+            position: relative;
+            overflow: hidden;
         }
         .btn-accent:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px 0 rgba(255, 140, 0, 0.35);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(255, 140, 0, 0.5);
         }
-        .nav-link {
-            position: relative;
-            transition: color 0.3s ease;
-        }
-        .nav-link::after {
+        .btn-accent::after {
             content: '';
             position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #ff8c00;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.5s;
+        }
+        .btn-accent:hover::after { left: 100%; }
+
+        /* --- TYPING CURSOR --- */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* --- FLOATING ICONS --- */
+        .float-icon {
+            animation: float-icon 4s ease-in-out infinite;
+        }
+        @keyframes float-icon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* --- NAV LINK --- */
+        .nav-link { position: relative; transition: color 0.3s ease; }
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 2px;
+            bottom: -4px; left: 0; background-color: #ff8c00;
             transition: width 0.3s ease-in-out;
         }
-        .nav-link:hover {
-            color: #ffffff;
-        }
-        .nav-link:hover::after {
-            width: 100%;
-        }
+        .nav-link:hover { color: #fff; }
+        .nav-link:hover::after { width: 100%; }
+
+        /* --- REVEAL ANIMATION --- */
         .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            opacity: 0; transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
         }
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
     </style>
 </head>
-<body class="bg-primary antialiased">
+<body class="antialiased">
 
-    <header class="fixed w-full bg-primary bg-opacity-80 backdrop-blur-sm z-50 transition-all duration-300 shadow-lg shadow-black/10">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <header class="fixed w-full top-0 z-50 transition-all duration-300" id="navbar">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-white">
-                <img src="logo.png" alt="Logo Temu Rumpun" class="h-8 md:h-10">
+            <a href="#" class="text-2xl font-bold text-white flex items-center gap-2 group">
+                <div class="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center text-primary font-bold group-hover:rotate-12 transition-transform">TR</div>
+                <span class="tracking-tight">TemuRumpun</span>
             </a>
+            
             <div class="hidden md:flex space-x-8 items-center">
-                <a href="#cara-kerja" class="nav-link text-gray-300">Cara Kerja</a>
-                <a href="#fitur" class="nav-link text-gray-300">Fitur Unggulan</a>
-                <a href="#untuk-pemilik" class="nav-link text-gray-300">Untuk Pemilik</a>
+                <a href="#cara-kerja" class="nav-link text-gray-300 text-sm font-medium">Cara Kerja</a>
+                <a href="#fitur" class="nav-link text-gray-300 text-sm font-medium">Kenapa Kami?</a>
+                <a href="#untuk-pemilik" class="nav-link text-gray-300 text-sm font-medium">Pemilik Kos</a>
             </div>
-            <a href="#gabung" class="hidden md:block btn-accent font-bold py-2 px-5 rounded-full">
-                Cari Teman Sekamar
-            </a>
-            <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
-                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+
+            <div class="hidden md:flex items-center gap-4">
+                <a href="#gabung" class="btn-accent font-bold py-2 px-6 rounded-full text-sm">
+                    Cari Teman
+                </a>
+            </div>
+
+            <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
             </button>
         </nav>
-        <div id="mobile-menu" class="hidden md:hidden">
-            <a href="#cara-kerja" class="block py-2 px-6 text-sm text-gray-300 hover:bg-secondary">Cara Kerja</a>
-            <a href="#fitur" class="block py-2 px-6 text-sm text-gray-300 hover:bg-secondary">Fitur Unggulan</a>
-            <a href="#untuk-pemilik" class="block py-2 px-6 text-sm text-gray-300 hover:bg-secondary">Untuk Pemilik</a>
+        
+        <div id="mobile-menu" class="hidden md:hidden glass-card absolute w-full border-t-0">
+            <div class="flex flex-col p-4 space-y-3">
+                <a href="#cara-kerja" class="text-gray-300 hover:text-accent transition">Cara Kerja</a>
+                <a href="#fitur" class="text-gray-300 hover:text-accent transition">Kenapa Kami?</a>
+                <a href="#untuk-pemilik" class="text-gray-300 hover:text-accent transition">Untuk Pemilik</a>
+                <a href="#gabung" class="text-accent font-bold">Gabung Sekarang</a>
+            </div>
         </div>
     </header>
 
     <main>
-        <section id="home" class="min-h-screen flex items-center pt-20">
-            <div class="container mx-auto px-6 text-center">
-                <div class="max-w-3xl mx-auto reveal">
-                    <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4">
-                        Temukan Rumahmu. <span class="text-accent">Temukan Komunitasmu.</span>
+        <section id="home" class="min-h-screen flex items-center pt-20 relative overflow-hidden">
+            <div class="container mx-auto px-6 text-center relative z-10">
+                
+                <div class="absolute top-0 left-10 md:left-1/4 text-4xl float-icon opacity-20 md:opacity-40" style="animation-delay: 0s;">🎮</div>
+                <div class="absolute bottom-20 right-10 md:right-1/4 text-4xl float-icon opacity-20 md:opacity-40" style="animation-delay: 1.5s;">🎸</div>
+                <div class="absolute top-10 right-10 text-4xl float-icon opacity-20 md:opacity-40" style="animation-delay: 2.5s;">🍕</div>
+
+                <div class="max-w-4xl mx-auto reveal">
+                    <div class="inline-block px-4 py-1 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-300 text-sm font-medium mb-6 backdrop-blur-sm">
+                        🚀 Platform Co-Living Paling Asik
+                    </div>
+                    <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6">
+                        Temukan Rumah.<br>
+                        Temukan <span class="text-accent typing-cursor" id="typing-text"></span>
                     </h1>
-                    <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-xl mx-auto">
-                        Capek scroll tanpa henti dan cemas cari teman sekamar? Temu Rumpun menghubungkanmu dengan orang yang cocok untuk mencari & berbagi rumah idaman, dengan aman dan terjangkau.
+                    <p class="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
+                        Stop drama teman sekamar yang nggak cocok! Kami bantu kamu cari <i>housemate</i> yang satu frekuensi, satu hobi, dan satu budget.
                     </p>
-                    <a href="#gabung" class="btn-accent font-bold py-3 px-8 rounded-full inline-block text-lg">
-                        Mulai Pencarianmu
-                    </a>
-                </div>
-            </div>
-        </section>
+                    <div class="flex flex-col md:flex-row justify-center gap-4">
+                        <a href="#gabung" class="btn-accent font-bold py-4 px-10 rounded-full text-lg shadow-lg shadow-orange-500/20">
+                            Mulai Cari Sekarang
+                        </a>
+                        <a href="#cara-kerja" class="py-4 px-10 rounded-full text-lg font-medium text-white border border-gray-600 hover:bg-white/10 transition glass-card">
+                            Lihat Caranya 👇
+                        </a>
+                    </div>
 
-        <section id="cara-kerja" class="py-20 md:py-32">
-             <div class="container mx-auto px-6">
-                <div class="text-center mb-16 reveal">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white">Co-Living Jadi Mudah</h2>
-                    <p class="text-gray-400 mt-2 max-w-2xl mx-auto">Perjalananmu menuju rumah idaman dan teman baru hanya dalam empat langkah.</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-                    <div class="reveal">
-                        <div class="flex justify-center items-center h-16 w-16 mx-auto mb-4 bg-secondary rounded-full border-2 border-accent">
-                            <span class="text-2xl font-bold text-accent">1</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-2">Buat Profilmu</h3>
-                        <p class="text-gray-400">Ceritakan gaya hidup, kebiasaan, dan kriteria teman sekamar idamanmu. Semakin lengkap, semakin akurat.</p>
-                    </div>
-                    <div class="reveal" style="transition-delay: 100ms;">
-                         <div class="flex justify-center items-center h-16 w-16 mx-auto mb-4 bg-secondary rounded-full border-2 border-accent">
-                            <span class="text-2xl font-bold text-accent">2</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-2">Dapatkan Rekomendasi</h3>
-                        <p class="text-gray-400">Sistem cerdas kami akan mencarikan calon teman sekamar yang se-frekuensi dan sesuai dengan budgetmu.</p>
-                    </div>
-                    <div class="reveal" style="transition-delay: 200ms;">
-                         <div class="flex justify-center items-center h-16 w-16 mx-auto mb-4 bg-secondary rounded-full border-2 border-accent">
-                            <span class="text-2xl font-bold text-accent">3</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-2">Kenalan dengan Rumpunmu</h3>
-                        <p class="text-gray-400">Ngobrol dengan calon temanmu lewat acara online atau chat pribadi untuk memastikan kecocokannya.</p>
-                    </div>
-                    <div class="reveal" style="transition-delay: 300ms;">
-                         <div class="flex justify-center items-center h-16 w-16 mx-auto mb-4 bg-secondary rounded-full border-2 border-accent">
-                            <span class="text-2xl font-bold text-accent">4</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-2">Amankan Rumahmu</h3>
-                        <p class="text-gray-400">Cari properti terverifikasi bersama dan manfaatkan fitur kami agar proses pindahan jadi gampang dan aman.</p>
+                    <div class="mt-12 flex justify-center items-center space-x-[-10px] opacity-80 grayscale hover:grayscale-0 transition duration-500">
+                        <div class="w-10 h-10 rounded-full bg-gray-300 border-2 border-[#1a102b]"></div>
+                        <div class="w-10 h-10 rounded-full bg-gray-400 border-2 border-[#1a102b]"></div>
+                        <div class="w-10 h-10 rounded-full bg-gray-500 border-2 border-[#1a102b]"></div>
+                        <div class="ml-4 text-sm text-gray-400 pl-4">Bergabung dengan <span class="font-bold text-white">50+ pencari kost</span> minggu ini</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="fitur" class="py-20 md:py-32 bg-secondary">
+        <section id="cara-kerja" class="py-24 relative">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16 reveal">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white">Lebih dari Sekadar Iklan</h2>
-                    <p class="text-gray-400 mt-2 max-w-2xl mx-auto">Kami siapkan solusi untuk masalah paling pusing saat mencari dan berbagi tempat tinggal.</p>
+                    <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">Cuma 4 Langkah Santai</h2>
+                    <p class="text-gray-400 max-w-xl mx-auto">Nggak perlu ribet, biar algoritma kami yang kerja keras buat kamu.</p>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="bg-primary p-8 rounded-2xl text-center reveal transform hover:-translate-y-2 transition-transform duration-300">
-                        <div class="inline-block text-accent bg-secondary p-4 rounded-full mb-4">
-                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="glass-card p-8 rounded-3xl text-center hover:-translate-y-2 transition duration-300 group reveal">
+                        <div class="w-14 h-14 mx-auto bg-orange-500/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-orange-500 transition-colors">
+                            <svg class="w-7 h-7 text-orange-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">Pencocokan Personalitas</h3>
-                        <p class="text-gray-400">Algoritma kami mencocokkanmu berdasarkan gaya hidup, kebersihan, & preferensi sosial—bukan cuma budget.</p>
+                        <h3 class="text-xl font-bold text-white mb-2">1. Isi Profil</h3>
+                        <p class="text-gray-400 text-sm">Kasih tau kami kebiasaanmu. Suka begadang? Suka kucing? Jujur aja!</p>
                     </div>
-                    <div class="bg-primary p-8 rounded-2xl text-center reveal transform hover:-translate-y-2 transition-transform duration-300" style="transition-delay: 100ms;">
-                        <div class="inline-block text-accent bg-secondary p-4 rounded-full mb-4">
-                           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-pie-chart"><path d="M21.21 15.89A10 10 0 1 1 8.11 2.99"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+
+                    <div class="glass-card p-8 rounded-3xl text-center hover:-translate-y-2 transition duration-300 group reveal" style="transition-delay: 100ms;">
+                        <div class="w-14 h-14 mx-auto bg-purple-500/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-purple-500 transition-colors">
+                            <svg class="w-7 h-7 text-purple-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">Patungan Biaya Jadi Ringan</h3>
-                        <p class="text-gray-400">Dapatkan hunian lebih baik di lokasi strategis. Platform kami memudahkanmu patungan sewa & tagihan secara adil.</p>
+                        <h3 class="text-xl font-bold text-white mb-2">2. Matchmaking</h3>
+                        <p class="text-gray-400 text-sm">Sistem pinter kami bakal nyariin kandidat yang 'klik' sama kriteria kamu.</p>
                     </div>
-                    <div class="bg-primary p-8 rounded-2xl text-center reveal transform hover:-translate-y-2 transition-transform duration-300" style="transition-delay: 200ms;">
-                        <div class="inline-block text-accent bg-secondary p-4 rounded-full mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+
+                    <div class="glass-card p-8 rounded-3xl text-center hover:-translate-y-2 transition duration-300 group reveal" style="transition-delay: 200ms;">
+                        <div class="w-14 h-14 mx-auto bg-pink-500/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-pink-500 transition-colors">
+                            <svg class="w-7 h-7 text-pink-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">Komunitas yang Aman</h3>
-                        <p class="text-gray-400">Setiap anggota terverifikasi. Dengan Surat Perjanjian & komunitas yang dimoderasi, kamu bisa merasa lebih aman dan nyaman.</p>
+                        <h3 class="text-xl font-bold text-white mb-2">3. Kenalan Dulu</h3>
+                        <p class="text-gray-400 text-sm">Chattingan aman di platform atau ikut acara online buat liat 'chemistry'-nya.</p>
+                    </div>
+
+                    <div class="glass-card p-8 rounded-3xl text-center hover:-translate-y-2 transition duration-300 group reveal" style="transition-delay: 300ms;">
+                        <div class="w-14 h-14 mx-auto bg-green-500/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-green-500 transition-colors">
+                            <svg class="w-7 h-7 text-green-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">4. Pindahan!</h3>
+                        <p class="text-gray-400 text-sm">Deal properti terverifikasi, tanda tangan kontrak digital, dan angkat koper!</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="untuk-pemilik" class="py-20 md:py-32">
+        <section id="fitur" class="py-24 bg-[#1a102b]/50">
             <div class="container mx-auto px-6">
-                <div class="flex flex-col items-center reveal text-center md:text-left">
-                     <div class="md:w-2/3">
-                        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Anda <span class="text-accent">Pemilik Properti?</span></h2>
-                        <p class="text-gray-300 mb-6 leading-relaxed">
-                            Isi properti Anda yang kosong lebih cepat dengan penyewa terpercaya yang sudah kami saring. Temu Rumpun menyediakan calon penyewa dari kalangan profesional muda dan mahasiswa yang mencari hunian co-living berkualitas.
-                        </p>
-                        <ul class="space-y-3 text-gray-300 inline-block text-left">
-                            <li class="flex items-start"><span class="text-accent mr-3 mt-1">✔</span> Penyewa terverifikasi yang cocok dan siap huni.</li>
-                            <li class="flex items-start"><span class="text-accent mr-3 mt-1">✔</span> Mengurangi masa kosong properti dan biaya iklan.</li>
-                            <li class="flex items-start"><span class="text-accent mr-3 mt-1">✔</span> Partner terpercaya dalam ekosistem co-living.</li>
+                <div class="flex flex-col md:flex-row items-center gap-12">
+                    <div class="md:w-1/2 reveal">
+                         <div class="relative">
+                            <div class="absolute -inset-4 bg-gradient-to-r from-orange-500 to-purple-600 rounded-2xl opacity-30 blur-lg"></div>
+                            <div class="glass-card p-8 rounded-2xl relative">
+                                <div class="flex items-center gap-4 mb-6 border-b border-white/10 pb-4">
+                                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-400 to-blue-600"></div>
+                                    <div>
+                                        <h4 class="font-bold text-white">Budi Santoso</h4>
+                                        <p class="text-xs text-gray-400">Match 95% • Gamer • Bersih</p>
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="h-2 bg-white/10 rounded w-3/4"></div>
+                                    <div class="h-2 bg-white/10 rounded w-1/2"></div>
+                                </div>
+                                <div class="mt-6 flex gap-2">
+                                    <span class="px-3 py-1 rounded-full bg-orange-500/20 text-orange-400 text-xs border border-orange-500/20">Suka Kopi</span>
+                                    <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 text-xs border border-purple-500/20">Night Owl</span>
+                                </div>
+                            </div>
+                            <div class="absolute -bottom-6 -right-6 bg-white text-primary font-bold py-2 px-4 rounded-lg shadow-xl transform rotate-3 animate-bounce">
+                                Match Cocok! 🔥
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 reveal">
+                        <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Bukan Sekadar Iklan Baris</h2>
+                        <p class="text-gray-400 mb-8 text-lg">Kami memecahkan masalah paling canggung saat nyari kost: <br><span class="text-white font-semibold">Ketidakcocokan kepribadian & masalah duit.</span></p>
+                        
+                        <ul class="space-y-6">
+                            <li class="flex items-start gap-4">
+                                <div class="bg-green-500/10 p-2 rounded-lg text-green-400 mt-1">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-xl font-bold text-white">Smart Personality Match</h4>
+                                    <p class="text-gray-400 text-sm">Algoritma psikologi buat nyari yang sefrekuensi.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <div class="bg-blue-500/10 p-2 rounded-lg text-blue-400 mt-1">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-xl font-bold text-white">Fair Split Bill</h4>
+                                    <p class="text-gray-400 text-sm">Fitur patungan otomatis yang transparan dan adil.</p>
+                                </div>
+                            </li>
                         </ul>
-                         <div class="mt-8">
-                             <a href="#" class="btn-accent font-bold py-3 px-8 rounded-full inline-block text-lg">
-                                Daftarkan Propertimu
-                            </a>
-                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="gabung" class="py-20 md:py-32 bg-secondary">
-            <div class="container mx-auto px-6">
-                <div class="max-w-2xl mx-auto text-center reveal">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Siap Temukan Rumpunmu?</h2>
-                    <p class="text-gray-400 mb-8">Segera gabung! Scan QR code di bawah ini untuk menjadi yang pertama tahu saat kami hadir di kotamu. Teman sekamar barumu sudah menanti!</p>
-                    
-                    <div class="flex flex-col items-center">
-                        <img src="qr-code.png" alt="QR Code untuk bergabung" class="w-48 h-48 rounded-lg mb-2 p-2 bg-white">
-                        <p class="text-gray-300 font-medium">Scan untuk Gabung</p>
+        <section id="untuk-pemilik" class="py-24 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-r from-purple-900/80 to-[#1a102b]"></div>
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="glass-card rounded-3xl p-10 md:p-16 text-center md:text-left flex flex-col md:flex-row items-center justify-between reveal">
+                    <div class="md:w-2/3 mb-8 md:mb-0">
+                        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Punya Properti Kosong?</h2>
+                        <p class="text-gray-300 text-lg mb-6">
+                            Isi properti Anda dengan penyewa berkualitas. Kami melakukan screening awal, jadi Anda tinggal terima beres.
+                        </p>
+                        <div class="flex flex-wrap gap-4 justify-center md:justify-start text-sm text-gray-400">
+                            <span class="flex items-center">✅ Bebas Drama</span>
+                            <span class="flex items-center">✅ Bayar Tepat Waktu</span>
+                            <span class="flex items-center">✅ Komunitas Terjaga</span>
+                        </div>
                     </div>
-
+                    <div>
+                        <a href="#" class="inline-block bg-white text-primary font-bold py-4 px-8 rounded-full hover:bg-gray-100 transition transform hover:scale-105 shadow-lg">
+                            Daftarkan Properti
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
+
+        <section id="gabung" class="py-24">
+            <div class="container mx-auto px-6 text-center reveal">
+                <h2 class="text-4xl font-bold text-white mb-4">Join Tribe Ini!</h2>
+                <p class="text-gray-400 mb-10 max-w-lg mx-auto">Jangan sampai ketinggalan. Scan QR di bawah buat jadi yang pertama tau update seru dan event community gathering.</p>
+                
+                <div class="inline-block p-4 bg-white rounded-2xl shadow-[0_0_40px_rgba(255,140,0,0.3)] transform hover:rotate-2 transition duration-500">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=TemuRumpunWaitlist" alt="QR Join" class="rounded-lg">
+                    <p class="text-xs font-bold text-primary mt-2 tracking-widest">SCAN ME</p>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <footer class="bg-primary border-t border-purple-900/50">
-        <div class="container mx-auto px-6 pt-12 pb-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 items-center text-center md:text-left mb-8 reveal">
-                <div>
-                    <a href="#" class="inline-block">
-                        <img src="logo.png" alt="Logo Temu Rumpun" class="h-10 mx-auto md:mx-0">
+    <footer class="border-t border-white/10 bg-[#150d24] pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-1">
+                     <a href="#" class="text-2xl font-bold text-white flex items-center gap-2 mb-4">
+                        <div class="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center text-primary font-bold">TR</div>
+                        <span>TemuRumpun</span>
                     </a>
-                    <p class="text-gray-500 mt-2 text-sm">Temukan & Berbagi Akomodasi.</p>
+                    <p class="text-gray-500 text-sm">Platform co-living modern untuk generasi yang butuh lebih dari sekadar tempat tidur.</p>
                 </div>
                 
-                <div class="text-gray-400">
-                    <h4 class="text-lg font-semibold text-white mb-2">Kunjungan Website</h4>
-                    <div class="flex justify-center md:justify-start space-x-6">
-                        <div>
-                            <p class="text-sm">Pengunjung Hari Ini</p>
-                            <p id="successful-matches" class="text-2xl font-bold text-accent">0</p>
-                        </div>
-                        <div>
-                            <p class="text-sm">Total Pengunjung</p>
-                            <p id="total-members" class="text-2xl font-bold text-accent">0</p>
-                        </div>
-                    </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Platform</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-orange-400">Cara Kerja</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Harga & Fee</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Keamanan</a></li>
+                    </ul>
                 </div>
 
-                <div class="flex flex-col items-center md:items-end">
-                    <h4 class="text-lg font-semibold text-white mb-3">Ikuti Kami</h4>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-accent transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
-                        <a href="#" class="text-gray-400 hover:text-accent transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a>
-                        <a href="#" class="text-gray-400 hover:text-accent transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Komunitas</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-orange-400">Blog Cerita</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Event</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Karir</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold mb-4">Statistik Live</h4>
+                    <div class="bg-white/5 rounded-xl p-4 border border-white/5">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-400 text-xs">Match Hari Ini</span>
+                            <span class="text-accent font-bold" id="successful-matches">0</span>
+                        </div>
+                        <div class="w-full bg-gray-700 h-1 rounded-full">
+                            <div class="bg-orange-500 h-1 rounded-full" style="width: 45%"></div>
+                        </div>
+                        <div class="flex justify-between mt-3">
+                            <span class="text-gray-400 text-xs">Total Member</span>
+                            <span class="text-white font-bold" id="total-members">0</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="border-t border-purple-900/50 pt-6 text-center text-gray-500">
-                <p>&copy; 2025 Temu Rumpun. Dari Orang Asing Jadi Teman Serumah.</p>
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
+                <p>&copy; 2025 Temu Rumpun. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white transition">Instagram</a>
+                    <a href="#" class="hover:text-white transition">Twitter/X</a>
+                    <a href="#" class="hover:text-white transition">TikTok</a>
+                </div>
             </div>
         </div>
     </footer>
 
     <script>
-        // JavaScript untuk toggle menu mobile
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
+        // --- Mobile Menu Toggle ---
+        const btn = document.getElementById('mobile-menu-button');
+        const menu = document.getElementById('mobile-menu');
+        const navbar = document.getElementById('navbar');
 
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
         });
 
-        // JavaScript untuk animasi saat scroll
-        const revealElements = document.querySelectorAll('.reveal');
+        // --- Navbar Blur on Scroll ---
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-[#1a102b]/90', 'backdrop-blur-md', 'shadow-lg');
+            } else {
+                navbar.classList.remove('bg-[#1a102b]/90', 'backdrop-blur-md', 'shadow-lg');
+            }
+        });
+
+        // --- Typing Effect ---
+        const textElement = document.getElementById('typing-text');
+        const words = ["Komunitasmu", "Sahabatmu", "Keluargamu", "Rumpunmu"];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typeSpeed = 100;
+
+        function type() {
+            const currentWord = words[wordIndex];
+            
+            if (isDeleting) {
+                textElement.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+                typeSpeed = 50; 
+            } else {
+                textElement.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+                typeSpeed = 150;
+            }
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                isDeleting = true;
+                typeSpeed = 2000; // Jeda sebelum menghapus
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                typeSpeed = 500; // Jeda sebelum ngetik kata baru
+            }
+
+            setTimeout(type, typeSpeed);
+        }
+        
+        document.addEventListener('DOMContentLoaded', type);
+
+        // --- Reveal Animation ---
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -271,36 +441,27 @@
                 }
             });
         }, { threshold: 0.1 });
-        revealElements.forEach(el => revealObserver.observe(el));
+        
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-        // JavaScript untuk animasi statistik
+        // --- Counter Animation ---
         function animateValue(obj, start, end, duration) {
             let startTimestamp = null;
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
                 const progress = Math.min((timestamp - startTimestamp) / duration, 1);
                 obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString('id-ID');
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
+                if (progress < 1) window.requestAnimationFrame(step);
             };
             window.requestAnimationFrame(step);
         }
 
-        function generateCommunityStats() {
-            const matchesEl = document.getElementById('successful-matches');
-            const membersEl = document.getElementById('total-members');
+        // Jalankan counter
+        setTimeout(() => {
+            animateValue(document.getElementById('successful-matches'), 0, 12, 2000);
+            animateValue(document.getElementById('total-members'), 0, 245, 2500);
+        }, 1000);
 
-            if (matchesEl && membersEl) {
-                const matches = 2;
-                const members = 54;
-                animateValue(matchesEl, 0, matches, 1500);
-                animateValue(membersEl, 0, members, 2000);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', generateCommunityStats);
     </script>
-
 </body>
 </html>
